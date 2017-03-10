@@ -1,0 +1,15 @@
+﻿@model IEnumerable<CommunityWebSite.Models.NewsArticle>
+
+@{ 
+    ViewData["Title"] = "Today's News";
+}
+
+<h2>@ViewData["Message"]</h2>
+@foreach (CommunityWebSite.Models.NewsArticle n in Model) {
+<article>
+    <h2>@n.Title</h2>
+    <h3>@n.DatePublished.ToString("D")</h3>
+    <p>@n.Article</p>
+</article>
+}
+

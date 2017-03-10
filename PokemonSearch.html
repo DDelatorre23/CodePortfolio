@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Pokemon Database Test Page</title>
+</head>
+<body>
+
+    <div>
+        <div id="pokemonResults" />
+    </div>
+    <div>
+        <h2>Search by Pokemon ID</h2>
+        <input type="text" id="pokemon" size="15" />
+        <input type="button" value="Search" onclick="search();" />
+        <p id="searchResults" />
+    </div>
+
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script>
+        var uri = 'https://pokeapi.co/api/v2/pokemon/'
+		var pokemonURI = uri + '1/';
+        $(document).ready(function () {
+            // Send an AJAX request
+            $.getJSON(pokemonURI)
+                .done(function (data) {
+                    // On success, 'data' contains the result as json
+					$('#pokemonResults').html(formatPokemon(data));
+                });
+        });
+
+        function formatPokemon(data) {
+			var pokemonStr = '<table border="1"><tr><th colspan="2">First ability and type for ' + data.name + '</th></tr>' +
+			'<tr><td>Type</td>><td>' + data.types[0].type.name + '</td></tr>' +
+			'<tr><td>Ability</td>><td>' + data.abilities[0].ability.name + '</td></tr>' +
+			'</table>';
+			
+            return pokemonStr;
+        }
+
+        function search() {
+            var pokemon = $('#pokemon').val();
+            $.getJSON(uri + pokemon + '/')
+                .done(function (data) {
+                    $('#searchResults').html(formatPokemon(data));
+                })
+                .fail(function (jqXHR, textStatus, err) {
+                    $('#searchResults').text('Error: ' + err);
+                });
+        }
+    </script>
+</body>
+</html>

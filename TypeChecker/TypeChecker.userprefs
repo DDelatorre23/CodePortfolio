@@ -1,0 +1,14 @@
+﻿<Properties StartupItem="TypeChecker\TypeChecker.csproj" RefactoringSettings.EnableRefactorings="True">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Android.05157df5e447c809" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="TypeChecker\MainActivity.cs">
+    <Files>
+      <File FileName="TypeChecker\TypeCheck.cs" Line="51" Column="25" />
+      <File FileName="TypeChecker\MainActivity.cs" Line="9" Column="78" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.TypeChecker AndroidDesignerPreferredDevice="Nexus 4" />
+</Properties>

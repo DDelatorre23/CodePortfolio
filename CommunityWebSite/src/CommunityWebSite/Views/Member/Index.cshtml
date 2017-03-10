@@ -1,0 +1,12 @@
+﻿@model List<CommunityWebSite.Models.Member>
+
+    <h1>List of Messages</h1>
+    @foreach (var m in Model) {
+        
+        @:First Name: @m.FirstName<br />
+        @:Last Name: @m.LastName <br />
+        @:Email: @m.Email <br />
+        @Html.ActionLink("Click for Messages", "GetMemberMessages", "Message", new { memberID = m.MemberID }, null) <br />
+    }
+@Html.ActionLink("Click here to view all messages", "Index", "Message")
+

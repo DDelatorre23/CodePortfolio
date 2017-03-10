@@ -1,0 +1,18 @@
+﻿@{ 
+    ViewData["Title"] = "Local News";
+}
+
+<h2>@ViewData["Message"]</h2>
+
+<h3>Come Joing Us for Movie Night!</h3>
+<p>Down below we have a short list of upcoming movies that will be played at our local gazebo by the river. <br />
+    Bring your lawn chairs and blankets!</p>
+<ul>
+    <li><bold>February 3rd</bold> - Inside Out</li>
+    <li><bold>February 10th</bold> - Minions</li>
+    <li><bold>February 17th</bold> - Star Wars: The Force Awakens</li>
+</ul>
+
+<h2><a asp-controller="News" asp-action="Today">Click Here!</a> to view today's news.</h2>
+
+<h3><a asp-controller="News" asp-action="Archive">Click Here!</a> to view all archived news.</h3>

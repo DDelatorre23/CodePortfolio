@@ -1,0 +1,26 @@
+﻿@model List<CommunityWebSite.Models.Message>
+
+<h1>List of Messages</h1>
+@foreach (var m in Model) {
+    @:Subject: @m.Subject <br />
+    @:From: @m.Sender.LastName, @m.Sender.FirstName <br />
+        @:Date Sent: @m.Date.ToString("d") <br />
+        @:Body: @m.Body <br />
+        @:Topic: @m.Topic <br /> <br />
+
+    <h3>Replies:</h3>
+    @for(int i = 0; i < m.MessageReplies.Count; i++) {
+        @m.MessageReplies[i].DateCreated <br />
+        @m.MessageReplies[i].Body <br />
+    }
+    <br />
+
+    @Html.ActionLink("Add a reply", "ReplyForm", "Reply",
+    new { subject = m.Subject, id = m.MessageID })
+    <br /> <br />
+
+}
+
+@Html.ActionLink("Sort by Topic A", "GetMessagesByTopic", "Message", new { topic = "Topic A"}, null) <br />
+@Html.ActionLink("Sort by Topic B", "GetMessagesByTopic", "Message", new { topic = "Topic B" }, null) <br />
+@Html.ActionLink("Sort by Topic C", "GetMessagesByTopic", "Message", new { topic = "Topic C" }, null) <br />

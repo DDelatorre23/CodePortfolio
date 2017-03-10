@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="99fd561cade54266be593b95f0f5372a" Name="Diagram1" ZoomLevel="64">
+        <EntityTypeShape EntityType="CourseEvaluationModel.Course" Width="1.5" PointX="0.75" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CourseEvaluationModel.Evaluation" Width="1.5" PointX="3" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CourseEvaluationModel.Question" Width="1.5" PointX="5.25" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CourseEvaluationModel.QuestionType" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CourseEvaluationModel.Student" Width="1.5" PointX="3.125" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CourseEvaluationModel.StudentEvaluation" Width="1.5" PointX="5.25" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="CourseEvaluationModel.StudentEvaluationAnswer" Width="1.5" PointX="7.5" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CourseEvaluationModel.vw_StudentAvailableEvaluation" Width="1.5" PointX="7.75" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CourseEvaluationModel.vw_StudentIncompleteEvaluation" Width="1.5" PointX="7.75" PointY="8.375" IsExpanded="true" />
+        <AssociationConnector Association="CourseEvaluationModel.FK_Evaluation_Course" ManuallyRouted="false" />
+        <AssociationConnector Association="CourseEvaluationModel.FK_StudentEvaluation_Evaluation" ManuallyRouted="false" />
+        <AssociationConnector Association="CourseEvaluationModel.FK_Question_QuestionType" ManuallyRouted="false" />
+        <AssociationConnector Association="CourseEvaluationModel.FK_StudentEvaluationQuestion_Question" ManuallyRouted="false" />
+        <AssociationConnector Association="CourseEvaluationModel.FK_StudentEvaluation_Student" ManuallyRouted="false" />
+        <AssociationConnector Association="CourseEvaluationModel.FK_StudentEvaluationQuestion_StudentEvaluation" ManuallyRouted="false" />
+        <AssociationConnector Association="CourseEvaluationModel.EvaluationQuestion" ManuallyRouted="false" />
+        <AssociationConnector Association="CourseEvaluationModel.StudentRegistration" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

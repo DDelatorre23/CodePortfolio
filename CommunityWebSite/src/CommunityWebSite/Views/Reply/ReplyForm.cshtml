@@ -1,0 +1,15 @@
+﻿@model CommunityWebSite.Models.ViewModels.ReplyViewModel
+
+<h1>Reply to this Message</h1>
+Subject: @Model.Subject
+
+<form asp-controller="Reply" asp-action="ReplyForm" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input asp-for="MessageID" type="hidden" />
+    <p>
+        <label asp-for="MessageReply.Body"></label>
+        <input asp-for="MessageReply.Body" />
+        <span asp-validation-for="MessageReply.Body" class="text-danger"></span>
+    </p>
+    <button type="submit">Post</button>
+</form>

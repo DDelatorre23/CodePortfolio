@@ -1,0 +1,23 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="EvaluationMaster.master.cs" Inherits="EvaluationApp.EvaluationMaster" %>
+
+<!DOCTYPE html>
+<%@ Register Src="~/EvaluationNav.ascx" TagPrefix="evl" TagName="EvaluationNav"%>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <link href="EvalutionStyles.css" rel="stylesheet" />
+</head>
+    <body>
+        <header>
+            <evl:EvaluationNav runat="server" id="evaluationNav" />
+        </header>
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        
+        </asp:ContentPlaceHolder>
+
+        <footer>
+           &#9734 This Web app was created by Daniel J. Dela Torre. &#9734
+        </footer>
+    </body>
+</html>

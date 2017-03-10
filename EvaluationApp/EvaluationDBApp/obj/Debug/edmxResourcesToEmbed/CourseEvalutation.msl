@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="CourseEvaluationModelStoreContainer" CdmEntityContainer="CourseEvaluationEntities">
+    <EntitySetMapping Name="Courses">
+      <EntityTypeMapping TypeName="CourseEvaluationModel.Course">
+        <MappingFragment StoreEntitySet="Course">
+          <ScalarProperty Name="CourseNumber" ColumnName="CourseNumber" />
+          <ScalarProperty Name="CourseName" ColumnName="CourseName" />
+          <ScalarProperty Name="CourseDescription" ColumnName="CourseDescription" />
+          <ScalarProperty Name="Credits" ColumnName="Credits" />
+          <ScalarProperty Name="OfferedFall" ColumnName="OfferedFall" />
+          <ScalarProperty Name="OfferedWinter" ColumnName="OfferedWinter" />
+          <ScalarProperty Name="OfferedSpring" ColumnName="OfferedSpring" />
+          <ScalarProperty Name="OfferedSummer" ColumnName="OfferedSummer" />
+          <ScalarProperty Name="PrerequisiteCourseNumber" ColumnName="PrerequisiteCourseNumber" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Evaluations">
+      <EntityTypeMapping TypeName="CourseEvaluationModel.Evaluation">
+        <MappingFragment StoreEntitySet="Evaluation">
+          <ScalarProperty Name="EvaluationID" ColumnName="EvaluationID" />
+          <ScalarProperty Name="CourseNumber" ColumnName="CourseNumber" />
+          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Questions">
+      <EntityTypeMapping TypeName="CourseEvaluationModel.Question">
+        <MappingFragment StoreEntitySet="Question">
+          <ScalarProperty Name="QuestionID" ColumnName="QuestionID" />
+          <ScalarProperty Name="QuestionTypeID" ColumnName="QuestionTypeID" />
+          <ScalarProperty Name="QuestionText" ColumnName="QuestionText" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QuestionTypes">
+      <EntityTypeMapping TypeName="CourseEvaluationModel.QuestionType">
+        <MappingFragment StoreEntitySet="QuestionType">
+          <ScalarProperty Name="QuestionTypeID" ColumnName="QuestionTypeID" />
+          <ScalarProperty Name="QuestionTypeName" ColumnName="QuestionTypeName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Students">
+      <EntityTypeMapping TypeName="CourseEvaluationModel.Student">
+        <MappingFragment StoreEntitySet="Student">
+          <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="LNumber" ColumnName="LNumber" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="StudentEvaluations">
+      <EntityTypeMapping TypeName="CourseEvaluationModel.StudentEvaluation">
+        <MappingFragment StoreEntitySet="StudentEvaluation">
+          <ScalarProperty Name="StudentEvaluationID" ColumnName="StudentEvaluationID" />
+          <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+          <ScalarProperty Name="EvaluationID" ColumnName="EvaluationID" />
+          <ScalarProperty Name="CompletionDate" ColumnName="CompletionDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="StudentEvaluationAnswers">
+      <EntityTypeMapping TypeName="CourseEvaluationModel.StudentEvaluationAnswer">
+        <MappingFragment StoreEntitySet="StudentEvaluationAnswer">
+          <ScalarProperty Name="StudentEvaluationID" ColumnName="StudentEvaluationID" />
+          <ScalarProperty Name="QuestionID" ColumnName="QuestionID" />
+          <ScalarProperty Name="Answer" ColumnName="Answer" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vw_StudentAvailableEvaluation">
+      <EntityTypeMapping TypeName="CourseEvaluationModel.vw_StudentAvailableEvaluation">
+        <MappingFragment StoreEntitySet="vw_StudentAvailableEvaluation">
+          <ScalarProperty Name="CourseNumber" ColumnName="CourseNumber" />
+          <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+          <ScalarProperty Name="EvaluationID" ColumnName="EvaluationID" />
+          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vw_StudentIncompleteEvaluation">
+      <EntityTypeMapping TypeName="CourseEvaluationModel.vw_StudentIncompleteEvaluation">
+        <MappingFragment StoreEntitySet="vw_StudentIncompleteEvaluation">
+          <ScalarProperty Name="CompletionDate" ColumnName="CompletionDate" />
+          <ScalarProperty Name="CourseNumber" ColumnName="CourseNumber" />
+          <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+          <ScalarProperty Name="EvaluationID" ColumnName="EvaluationID" />
+          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="EvaluationQuestion" TypeName="CourseEvaluationModel.EvaluationQuestion" StoreEntitySet="EvaluationQuestion">
+      <EndProperty Name="Evaluation">
+        <ScalarProperty Name="EvaluationID" ColumnName="EvaluationID" />
+      </EndProperty>
+      <EndProperty Name="Question">
+        <ScalarProperty Name="QuestionID" ColumnName="QuestionID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <AssociationSetMapping Name="StudentRegistration" TypeName="CourseEvaluationModel.StudentRegistration" StoreEntitySet="StudentRegistration">
+      <EndProperty Name="Course">
+        <ScalarProperty Name="CourseNumber" ColumnName="CourseNumber" />
+      </EndProperty>
+      <EndProperty Name="Student">
+        <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping>

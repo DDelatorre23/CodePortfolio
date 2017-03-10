@@ -1,0 +1,598 @@
+ CREATE SEQUENCE pid_seq
+  MINVALUE 001
+  MAXVALUE 2000
+  START WITH 004
+  INCREMENT BY 1
+  CACHE 20;
+
+CREATE TABLE pm_pokemon
+(nationaldexid NUMBER(4),
+ pokemonname VARCHAR(15),
+ species VARCHAR(20),
+ height NUMBER(5,2),
+ weight NUMBER(5,2),
+ hp NUMBER(3),
+ attack NUMBER(3),
+ defense NUMBER(3),
+ specialattack NUMBER(3),
+ specialdefense NUMBER(3),
+ speed NUMBER(3),
+ totalstats NUMBER(3),
+ CONSTRAINT name_uc UNIQUE (pokemonname),
+ CONSTRAINT natdex_pk PRIMARY KEY (nationaldexid)
+ );
+ 
+CREATE TABLE pm_type
+ (typeid VARCHAR(3),
+  typename VARCHAR(10),
+  CONSTRAINT type_pk PRIMARY KEY(typeid)
+  );
+  
+CREATE TABLE pm_moves
+(moveid VARCHAR(4),
+ movename VARCHAR(15),
+ typeid VARCHAR(3) NOT NULL,
+ CATEGORY VARCHAR(10),
+ POWER NUMBER(3),
+ accuracy NUMBER(3),
+ pp NUMBER(2),
+ effect VARCHAR(50),
+ CONSTRAINT move_pk PRIMARY KEY(moveid),
+ CONSTRAINT type_fk FOREIGN KEY(typeid)
+ REFERENCES pm_type(typeid),
+ CONSTRAINT check_accuracy_range CHECK(accuracy < 101)
+ );
+ 
+CREATE TABLE pokemonmoves
+(nationaldexid NUMBER (4),
+ moveid VARCHAR(4),
+ learnedmethod VARCHAR(30),
+ CONSTRAINT natdex_move_pk PRIMARY KEY(nationaldexid, moveid),
+ CONSTRAINT move_fk FOREIGN KEY (moveid)
+ REFERENCES pm_moves(moveid),
+ CONSTRAINT nat_dex_fk FOREIGN KEY (nationaldexid)
+ REFERENCES pm_pokemon(nationaldexid)
+ );
+ 
+CREATE TABLE pm_ability
+ (abilityid NUMBER(3),
+  abilityname VARCHAR(20),
+  description VARCHAR(100),
+  genintroduced NUMBER(2),
+  CONSTRAINT ability_pk PRIMARY KEY(abilityid),
+  CONSTRAINT check_gen CHECK(genintroduced < 8)
+  );
+
+CREATE TABLE pokemonability
+ (nationaldexid NUMBER(4),
+  abilityid NUMBER(3),
+  CONSTRAINT natdex_ability_pk PRIMARY KEY(nationaldexid, abilityid),
+  CONSTRAINT natdex_fk FOREIGN KEY(nationaldexid)
+  REFERENCES pm_pokemon(nationaldexid),
+  CONSTRAINT ability_fk FOREIGN KEY(abilityid)
+  REFERENCES pm_ability(abilityid)
+  );
+  
+CREATE TABLE pm_items
+ (itemid VARCHAR(5),
+  itemname VARCHAR(15),
+  itemdescription VARCHAR(50),
+  itemcategory VARCHAR(25),
+  itemeffects VARCHAR(100),
+  CONSTRAINT items_pk PRIMARY KEY(itemid)
+  );
+
+CREATE TABLE pm_evolveitems
+ (nationaldexid NUMBER(4),
+  itemid VARCHAR(5),
+  evolutionmethod VARCHAR(25),
+  CONSTRAINT natdex_items_pk PRIMARY KEY(nationaldexid, itemid),
+  CONSTRAINT natdex_item_fk FOREIGN KEY(nationaldexid)
+  REFERENCES pm_pokemon(nationaldexid),
+  CONSTRAINT items_fk FOREIGN KEY(itemid)
+  REFERENCES pm_items(itemid)
+  );
+  
+CREATE TABLE pokemontype
+ (nationaldexid NUMBER(4),
+  typeid VARCHAR(3),
+  CONSTRAINT natdex_type_pk PRIMARY KEY(nationaldexid, typeid),
+  CONSTRAINT natdex_type_fk FOREIGN KEY(nationaldexid)
+  REFERENCES pm_pokemon(nationaldexid),
+  CONSTRAINT pktype_fk FOREIGN KEY(typeid)
+  REFERENCES pm_type(typeid)
+  );
+  
+CREATE TABLE pm_egggroups
+ (egggroupid VARCHAR(4),
+  egggroupname VARCHAR(10),
+  CONSTRAINT egg_group_pk PRIMARY KEY(egggroupid)
+ );
+ 
+CREATE TABLE pokemonegggroup
+ (nationaldexid NUMBER(4),
+  egggroupid VARCHAR(4),
+  CONSTRAINT natdex_egg_pk PRIMARY KEY(nationaldexid, egggroupid),
+  CONSTRAINT natdex_egg_fk FOREIGN KEY(nationaldexid)
+  REFERENCES pm_pokemon(nationaldexid),
+  CONSTRAINT egg_fk FOREIGN KEY(egggroupid)
+  REFERENCES pm_egggroups(egggroupid)
+  );
+  
+CREATE TABLE pm_region
+ (regionid VARCHAR(4),
+  regionname VARCHAR(10),
+  professorname VARCHAR(15),
+  generation NUMBER(2),
+  CONSTRAINT region_pk PRIMARY KEY (regionid)
+  );
+  
+CREATE TABLE pm_gym
+ (gymid VARCHAR(4),
+  gymname VARCHAR(20),
+  gymleader VARCHAR (10),
+  typeid VARCHAR(3),
+  gymbadge VARCHAR (10),
+  CONSTRAINT gym_pk PRIMARY KEY (gymid),
+  CONSTRAINT type_num_fk FOREIGN KEY (typeid)
+  REFERENCES pm_type (typeid)
+  );
+
+CREATE TABLE regiongym
+ (regionid VARCHAR(4),
+  gymid VARCHAR(4),
+  CONSTRAINT region_gym_pk PRIMARY KEY (regionid, gymid),
+  CONSTRAINT reg_id_pk FOREIGN KEY (regionid)
+  REFERENCES pm_region (regionid),
+  CONSTRAINT gym_fk FOREIGN KEY (gymid)
+  REFERENCES pm_gym (gymid)
+  );
+  
+CREATE TABLE pm_localdex
+ (nationaldexid NUMBER(4),
+  regionid VARCHAR(4),
+  LOCATION VARCHAR(20),
+  isnatdexreq VARCHAR(5) DEFAULT 'false',
+  CONSTRAINT natdex_reg_pk PRIMARY KEY(nationaldexid, regionid),
+  CONSTRAINT natdex_reg_fk FOREIGN KEY(nationaldexid)
+  REFERENCES pm_pokemon(nationaldexid),
+  CONSTRAINT reg_fk FOREIGN KEY(regionid)
+  REFERENCES pm_region(regionid),
+  CONSTRAINT check_truefalse CHECK (isnatdexreq IN ('false', 'true'))
+  );
+CREATE INDEX pokemon_idx
+  ON pm_pokemon (pokemonname);
+  
+CREATE INDEX move_idx
+  ON pm_moves (movename);
+
+CREATE INDEX ability_idx
+  ON pm_ability (abilityname);
+  
+CREATE INDEX item_idx
+  ON pm_items (itemname);
+
+CREATE INDEX type_idx
+  ON pm_type (typename);
+  
+CREATE INDEX egg_group_idx
+  ON pm_egggroups (egggroupname);
+  
+CREATE INDEX region_idx
+  ON pm_region (regionname);
+
+CREATE INDEX gym_idx
+  ON pm_gym (gymname);
+  
+INSERT INTO pm_pokemon(nationaldexid, pokemonname, species, height, weight,
+hp, attack, defense, specialattack, specialdefense, speed, totalstats) VALUES
+(001, 'Bulbasaur', 'Seed', 0.71, 15.2, 45, 49, 49, 65, 65, 45, 318);
+INSERT INTO pm_pokemon(nationaldexid, pokemonname, species, height, weight,
+hp, attack, defense, specialattack, specialdefense, speed, totalstats) VALUES
+(002, 'Ivysaur', 'Seed', 0.99, 28.7, 60, 62, 63, 80, 80, 60, 405);
+INSERT INTO pm_pokemon(nationaldexid, pokemonname, species, height, weight,
+hp, attack, defense, specialattack, specialdefense, speed, totalstats) VALUES
+(003, 'Venusaur', 'Seed', 2.01, 220.5, 80, 82, 83, 100, 100, 80, 525);
+INSERT INTO pm_pokemon(nationaldexid, pokemonname, species, height, weight,
+hp, attack, defense, specialattack, specialdefense, speed, totalstats) VALUES
+(058, 'Growlithe', 'Puppy', 0.71, 41.9, 55, 70, 45, 70, 50, 60, 350);
+INSERT INTO pm_pokemon(nationaldexid, pokemonname, species, height, weight,
+hp, attack, defense, specialattack, specialdefense, speed, totalstats) VALUES
+(181, 'Ampharos', 'Light', 1.40, 135.6, 90, 75, 85, 115, 90, 55, 510);
+INSERT INTO pm_pokemon(nationaldexid, pokemonname, species, height, weight,
+hp, attack, defense, specialattack, specialdefense, speed, totalstats) VALUES
+(260, 'Swampert', 'Mud Fish', 1.50, 180.6, 100, 110, 90, 85, 90, 60, 535);
+INSERT INTO pm_pokemon(nationaldexid, pokemonname, species, height, weight,
+hp, attack, defense, specialattack, specialdefense, speed, totalstats) VALUES
+(330, 'Flygon', 'Mystic', 2.01, 180.8, 80, 100, 80, 80, 80, 100, 520);
+
+
+INSERT INTO pm_type(typeid, typename) VALUES ('T01', 'Grass');
+INSERT INTO pm_type(typeid, typename) VALUES ('T02', 'Water');
+INSERT INTO pm_type(typeid, typename) VALUES ('T03', 'Fire');
+INSERT INTO pm_type(typeid, typename) VALUES ('T04', 'Electric');
+INSERT INTO pm_type(typeid, typename) VALUES ('T05', 'Flying');
+INSERT INTO pm_type(typeid, typename) VALUES ('T06', 'Poison');
+INSERT INTO pm_type(typeid, typename) VALUES ('T07', 'Dragon');
+INSERT INTO pm_type(typeid, typename) VALUES ('T08', 'Ground');
+
+INSERT INTO pm_moves(moveid, movename, typeid, CATEGORY, POWER, accuracy, pp, effect)
+VALUES ('m001', 'Vine Whip', 'T01', 'Physical', 45, 100, 25, 'No Effect');
+INSERT INTO pm_moves(moveid, movename, typeid, CATEGORY, POWER, accuracy, pp, effect)
+VALUES ('m002', 'Earthquake', 'T08', 'Physical', 100, 100, 10, 'Power doubled if target used dig');
+INSERT INTO pm_moves(moveid, movename, typeid, CATEGORY, POWER, accuracy, pp, effect)
+VALUES ('m003', 'Dragon Pulse', 'T07', 'Special', 85, 100, 10, 'No Effect');
+INSERT INTO pm_moves(moveid, movename, typeid, CATEGORY, POWER, accuracy, pp, effect)
+VALUES ('m004', 'Toxic', 'T06', 'Status', NULL, 90, 10, 'Badly poisons target');
+
+INSERT INTO pokemonmoves (nationaldexid, moveid) VALUES (001, 'm001');
+INSERT INTO pokemonmoves (nationaldexid, moveid) VALUES (001, 'm004');
+INSERT INTO pokemonmoves (nationaldexid, moveid) VALUES (002, 'm001');
+INSERT INTO pokemonmoves (nationaldexid, moveid) VALUES (002, 'm004');
+INSERT INTO pokemonmoves (nationaldexid, moveid) VALUES (003, 'm001');
+INSERT INTO pokemonmoves (nationaldexid, moveid) VALUES (003, 'm004');
+INSERT INTO pokemonmoves (nationaldexid, moveid) VALUES (181, 'm003');
+INSERT INTO pokemonmoves (nationaldexid, moveid) VALUES (260, 'm002');
+INSERT INTO pokemonmoves (nationaldexid, moveid, learnedmethod) VALUES (330, 'm002', 'Use TM26');
+INSERT INTO pokemonmoves (nationaldexid, moveid) VALUES (330, 'm003');
+
+INSERT INTO pokemontype (nationaldexid, typeid) VALUES (001, 'T01');
+INSERT INTO pokemontype (nationaldexid, typeid) VALUES (001, 'T06');
+INSERT INTO pokemontype (nationaldexid, typeid) VALUES (002, 'T01');
+INSERT INTO pokemontype (nationaldexid, typeid) VALUES (002, 'T06');
+INSERT INTO pokemontype (nationaldexid, typeid) VALUES (003, 'T01');
+INSERT INTO pokemontype (nationaldexid, typeid) VALUES (003, 'T06');
+INSERT INTO pokemontype (nationaldexid, typeid) VALUES (058, 'T03');
+INSERT INTO pokemontype (nationaldexid, typeid) VALUES (181, 'T04');
+INSERT INTO pokemontype (nationaldexid, typeid) VALUES (260, 'T02');
+INSERT INTO pokemontype (nationaldexid, typeid) VALUES (260, 'T08');
+INSERT INTO pokemontype (nationaldexid, typeid) VALUES (330, 'T07');
+INSERT INTO pokemontype (nationaldexid, typeid) VALUES (330, 'T08');
+
+INSERT INTO pm_ability (abilityid, abilityname, description, genintroduced)
+VALUES (001, 'Overgrow', 'Increases power of Grass type moves when users health drops below 1/3 of max health',
+3);
+INSERT INTO pm_ability (abilityid, abilityname, description, genintroduced)
+VALUES (002, 'Chlorophyll', 'Boosts the Pokémon’s Speed in sunshine', 3);
+INSERT INTO pm_ability (abilityid, abilityname, description, genintroduced)
+VALUES (003, 'Torrent', 'Increases power of Water type moves when users health drops below 1/3 of max health',
+3);
+INSERT INTO pm_ability (abilityid, abilityname, description, genintroduced)
+VALUES (004, 'Damp', 'Prevents the use of Selfdestruct, Explosion, and Aftermath by your opponent', 3);
+INSERT INTO pm_ability (abilityid, abilityname, description, genintroduced)
+VALUES (005, 'Levitate', 'Immune to all Ground moves', 3);
+
+INSERT INTO pokemonability (nationaldexid, abilityid) VALUES (001, 001);
+INSERT INTO pokemonability (nationaldexid, abilityid) VALUES (001, 002);
+INSERT INTO pokemonability (nationaldexid, abilityid) VALUES (002, 001);
+INSERT INTO pokemonability (nationaldexid, abilityid) VALUES (002, 002);
+INSERT INTO pokemonability (nationaldexid, abilityid) VALUES (003, 001);
+INSERT INTO pokemonability (nationaldexid, abilityid) VALUES (003, 002);
+INSERT INTO pokemonability (nationaldexid, abilityid) VALUES (260, 003);
+INSERT INTO pokemonability (nationaldexid, abilityid) VALUES (260, 004);
+INSERT INTO pokemonability (nationaldexid, abilityid) VALUES (330, 005);
+
+INSERT INTO pm_items (itemid, itemname, itemcategory, itemeffects)
+VALUES ('HI001', 'Ampharosite', 'Mega Stone', 'Enables Ampharos to Mega Evolve during battle');
+INSERT INTO pm_items (itemid, itemname, itemcategory, itemeffects)
+VALUES ('HI002', 'Swampertite', 'Mega Stone', 'Enables Swampert to Mega Evolve during battle');
+INSERT INTO pm_items (itemid, itemname, itemcategory, itemeffects)
+VALUES ('HI003', 'Venusaurite', 'Mega Stone', 'Enables Venusaur to Mega Evolve during battle');
+INSERT INTO pm_items (itemid, itemname, itemcategory, itemeffects)
+VALUES ('GI001', 'Fire Stone', 'Evolutionary Stone', 'Enables certain species to evolve');
+ 
+INSERT INTO pm_evolveitems (nationaldexid, itemid, evolutionmethod)
+VALUES ('181', 'HI001', 'Hold during battle');
+INSERT INTO pm_evolveitems (nationaldexid, itemid, evolutionmethod)
+VALUES ('003', 'HI003', 'Hold during battle'); 
+INSERT INTO pm_evolveitems (nationaldexid, itemid, evolutionmethod)
+VALUES ('260', 'HI002', 'Hold during battle');
+INSERT INTO pm_evolveitems (nationaldexid, itemid, evolutionmethod)
+VALUES ('058', 'GI001', 'Consumed by Pokemon');
+
+INSERT INTO pm_egggroups(egggroupid, egggroupname) VALUES ('EG01', 'Grass');
+INSERT INTO pm_egggroups(egggroupid, egggroupname) VALUES ('EG02', 'Monster');
+INSERT INTO pm_egggroups(egggroupid, egggroupname) VALUES ('EG03', 'Field');
+INSERT INTO pm_egggroups(egggroupid, egggroupname) VALUES ('EG04', 'Water 1');
+INSERT INTO pm_egggroups(egggroupid, egggroupname) VALUES ('EG05', 'Bug');
+
+INSERT INTO pokemonegggroup(nationaldexid, egggroupid) VALUES (001, 'EG01');
+INSERT INTO pokemonegggroup(nationaldexid, egggroupid) VALUES (001, 'EG02');
+INSERT INTO pokemonegggroup(nationaldexid, egggroupid) VALUES (002, 'EG01');
+INSERT INTO pokemonegggroup(nationaldexid, egggroupid) VALUES (002, 'EG02');
+INSERT INTO pokemonegggroup(nationaldexid, egggroupid) VALUES (003, 'EG01');
+INSERT INTO pokemonegggroup(nationaldexid, egggroupid) VALUES (003, 'EG02');
+INSERT INTO pokemonegggroup(nationaldexid, egggroupid) VALUES (058, 'EG03');
+INSERT INTO pokemonegggroup(nationaldexid, egggroupid) VALUES (181, 'EG02');
+INSERT INTO pokemonegggroup(nationaldexid, egggroupid) VALUES (181, 'EG03');
+INSERT INTO pokemonegggroup(nationaldexid, egggroupid) VALUES (260, 'EG02');
+INSERT INTO pokemonegggroup(nationaldexid, egggroupid) VALUES (260, 'EG04');
+INSERT INTO pokemonegggroup(nationaldexid, egggroupid) VALUES (330, 'EG05');
+
+INSERT INTO pm_region(regionid, regionname, professorname, generation)
+VALUES ('R001', 'Kanto', 'Oak', 1);
+INSERT INTO pm_region(regionid, regionname, professorname, generation)
+VALUES ('R002', 'Johto', 'Elm', 2);
+INSERT INTO pm_region(regionid, regionname, professorname, generation)
+VALUES ('R003', 'Hoenn', 'Birch', 3);
+INSERT INTO pm_region(regionid, regionname, professorname, generation)
+VALUES ('R004', 'Shinnoh', 'Rowan', 4);
+INSERT INTO pm_region(regionid, regionname, professorname, generation)
+VALUES ('R005', 'Unova', 'Juniper', 5);
+INSERT INTO pm_region(regionid, regionname, professorname, generation)
+VALUES ('R006', 'Kalos', 'Sycamore', 6);
+
+INSERT INTO pm_gym(gymid, gymname, gymleader, typeid, gymbadge)
+VALUES ('KA02', 'Cerulean', 'Misty', 'T02', 'Cascade');
+INSERT INTO pm_gym(gymid, gymname, gymleader, typeid, gymbadge)
+VALUES ('KA03', 'Vermilion', 'Lt. Surge', 'T04', 'Thunder');
+INSERT INTO pm_gym(gymid, gymname, gymleader, typeid, gymbadge)
+VALUES ('JH08', 'Blackthorn', 'Clair', 'T07', 'Rising');
+INSERT INTO pm_gym(gymid, gymname, gymleader, typeid, gymbadge)
+VALUES ('HN03', 'Mauville', 'Wattson', 'T04', 'Dynamo');
+INSERT INTO pm_gym(gymid, gymname, gymleader, typeid, gymbadge)
+VALUES ('HN04', 'Lavaridge', 'Flannery', 'T03', 'Heat');
+
+INSERT INTO regiongym(regionid, gymid) VALUES ('R001', 'KA02');
+INSERT INTO regiongym(regionid, gymid) VALUES ('R001', 'KA03');
+INSERT INTO regiongym(regionid, gymid) VALUES ('R002', 'JH08');
+INSERT INTO regiongym(regionid, gymid) VALUES ('R003', 'HN03');
+INSERT INTO regiongym(regionid, gymid) VALUES ('R003', 'HN04');
+
+INSERT INTO pm_localdex(nationaldexid, regionid, LOCATION, isnatdexreq)
+VALUES (001, 'R001', 'Gift from Professor', 'false');
+INSERT INTO pm_localdex(nationaldexid, regionid, LOCATION, isnatdexreq)
+VALUES (002, 'R001', 'Evolve Bulbasaur', 'false');
+INSERT INTO pm_localdex(nationaldexid, regionid, LOCATION, isnatdexreq)
+VALUES (003, 'R001', 'Evolve Ivysaur', 'false');
+INSERT INTO pm_localdex(nationaldexid, regionid, LOCATION, isnatdexreq)
+VALUES (058, 'R001', 'Route 7', 'false');
+INSERT INTO pm_localdex(nationaldexid, regionid, LOCATION, isnatdexreq)
+VALUES (181, 'R002', 'Evolve Flaaffy', 'false');
+INSERT INTO pm_localdex(nationaldexid, regionid, LOCATION, isnatdexreq)
+VALUES (260, 'R003', 'Evolve Marshstop', 'false');
+INSERT INTO pm_localdex(nationaldexid, regionid, LOCATION, isnatdexreq)
+VALUES (330, 'R003', 'Evolve Vibrava', 'false');
+
+SELECT p.pokemonname, t.typename, A.abilityname, e.egggroupname
+FROM pm_pokemon p, pm_type t, pokemontype pt, pm_ability A, pokemonability pa,
+pm_egggroups e, pokemonegggroup pg
+WHERE p.nationaldexid = pt.nationaldexid
+AND t.typeid = pt.typeid
+AND pa.abilityid = A.abilityid
+AND pa.nationaldexid = p.nationaldexid
+AND pg.egggroupid = e.egggroupid
+AND pg.nationaldexid = p.nationaldexid
+ORDER BY p.pokemonname;
+
+
+SELECT pokemonname, movename, learnedmethod
+FROM pm_pokemon p, pm_moves m, pokemonmoves pm
+WHERE p.nationaldexid = pm.nationaldexid
+AND pm.moveid = m.moveid;
+
+SELECT *
+FROM pm_gym;
+
+SELECT *
+FROM pm_region, pm_gym, regiongym
+WHERE regiongym.regionid = pm_region.regionid
+AND regiongym.gymid = pm_gym.gymid;
+
+SELECT *
+FROM pm_items i, pm_evolveitems e
+WHERE i.itemid = e.itemid;
+
+SELECT pokemonname, r.regionname, l.LOCATION
+FROM pm_pokemon p, pm_localdex l, pm_region r
+WHERE p.nationaldexid = l.nationaldexid
+AND r.regionid = l.regionid;
+
+CREATE Table new_pkmn_log
+(nationaldexid NUMBER(4),
+ dateadded DATE);
+
+CREATE Table move_change_log
+(moveid Varchar(4),
+ changedate Date,
+ changevalue NUMBER (2),
+ changetype varchar(5));
+
+-----------------------Procedures, functions and triggers-------------------------------
+CREATE OR REPLACE PACKAGE pkmn_pkg IS
+PROCEDURE add_pokemon_pp
+(p_id IN NUMBER, p_name IN VARCHAR, p_type IN VARCHAR,
+ p_ability IN VARCHAR);
+ 
+PROCEDURE update_move_pp
+(p_move_id IN VARCHAR,
+ p_power IN NUMBER,
+ p_change IN VARCHAR);
+
+PROCEDURE remove_type_pp
+(p_type IN VARCHAR);
+END pkmn_pkg;
+
+CREATE OR REPLACE PACKAGE BODY pkmn_pkg IS
+--This function will accept a name of a type and return its primary key. This 
+--function is useful for the add_pokemon_pp procedure when adding to the junction table 
+ FUNCTION type_id_pf
+(p_type IN VARCHAR)
+RETURN VARCHAR
+IS 
+lv_type_num pm_type.typeid%TYPE;
+BEGIN
+  SELECT typeid
+  INTO lv_type_num
+  FROM  pm_type
+  WHERE typename = p_type;
+  RETURN lv_type_num;
+exception
+   WHEN no_data_found THEN
+     dbms_output.put_line('Invalid type name!');
+END type_id_pf;
+
+--This function will accept a name of am ability and return its primary key. This 
+--function is useful for the add_pokemon_pp procedure when adding to the junction table 
+FUNCTION ability_id_pf
+(p_ability IN VARCHAR)
+RETURN VARCHAR
+IS 
+lv_abil_num pm_ability.abilityid%TYPE;
+BEGIN
+  SELECT abilityid
+  INTO lv_abil_num
+  FROM  pm_ability
+  WHERE abilityname = p_ability;
+  RETURN lv_abil_num;
+exception
+   WHEN no_data_found THEN
+     dbms_output.put_line('Invalid ability name!');
+END ability_id_pf;
+
+--This procedure adds a new pokemon to the database and data to its respective junction table
+ PROCEDURE add_pokemon_pp
+(p_id IN NUMBER, p_name IN VARCHAR, p_type IN VARCHAR,
+ p_ability IN VARCHAR)
+ IS
+ lv_abil_num pm_ability.abilityid%TYPE;
+ lv_type_num pm_type.typeid%TYPE;
+BEGIN
+  lv_abil_num := ability_id_pf(p_ability);
+  lv_type_num := type_id_pf(p_type);
+  
+  INSERT INTO pm_pokemon(nationaldexid, pokemonname) VALUES(p_id, p_name);
+  INSERT INTO pokemontype(nationaldexid, typeid) VALUES (p_id, lv_type_num);
+  INSERT INTO pokemonability (nationaldexid, abilityid) VALUES (p_id, lv_abil_num);
+END add_pokemon_pp;
+
+--Modifies the power of a move. 
+PROCEDURE update_move_pp
+(p_move_id IN VARCHAR,
+ p_power IN NUMBER,
+ p_change IN VARCHAR)
+ IS 
+ lv_move_power pm_moves.POWER%TYPE;
+BEGIN
+  SELECT POWER
+  INTO lv_move_power
+  FROM pm_moves
+  WHERE moveid = p_move_id;
+  IF p_change = 'Add' THEN
+  lv_move_power := lv_move_power + p_power;
+  elsif p_change = 'Minus' THEN
+  lv_move_power := lv_move_power - p_power;
+END IF;
+  
+  UPDATE pm_moves
+  SET POWER = lv_move_power
+  WHERE moveid = p_move_id;
+  
+END update_move_pp;
+  
+--removes a type from the data base 
+PROCEDURE remove_type_pp
+(p_type IN VARCHAR)
+IS
+lv_type_num pm_type.typeid%TYPE;
+BEGIN
+lv_type_num := type_id_pf(p_type);
+
+DELETE
+FROM pokemontype
+WHERE typeid = lv_type_num;
+
+UPDATE pm_moves
+SET typeid = 'T00'
+WHERE typeid = lv_type_num;
+
+UPDATE pm_gym
+SET typeid = 'T00'
+WHERE typeid = lv_type_num;
+
+DELETE
+FROM pm_type
+WHERE typeid = lv_type_num;
+
+END remove_type_pp;
+END pkmn_pkg;
+
+
+CREATE OR REPLACE PACKAGE pkmn_item_pkg IS
+PROCEDURE item_desc_pp
+(p_item IN VARCHAR,
+ p_desc_new IN VARCHAR);
+ 
+FUNCTION gym_leader_pf
+(p_type IN VARCHAR,
+ p_reg IN VARCHAR)
+ RETURN VARCHAR;
+END;
+ 
+CREATE OR REPLACE PACKAGE BODY pkmn_item_pkg IS
+-- Changes the description of an item. 
+PROCEDURE item_desc_pp
+(p_item IN VARCHAR,
+ p_desc_new IN VARCHAR)
+ IS
+BEGIN
+ UPDATE pm_items
+ SET itemdescription = p_desc_new
+ WHERE itemid = p_item;
+ END item_desc_pp;
+ --takes a region and type and returns a gymleader name if there is a match.
+FUNCTION gym_leader_pf
+(p_type IN VARCHAR,
+ p_reg IN VARCHAR)
+ RETURN VARCHAR
+IS
+lv_gym_leader pm_gym.gymleader%TYPE;
+BEGIN
+ SELECT gymleader
+  INTO lv_gym_leader
+  FROM pm_gym g, pm_region r, regiongym rg, pm_type t
+  WHERE g.gymid = rg.gymid
+   AND r.regionid = rg.regionid
+   AND g.typeid = t.typeid
+   AND t.typename = p_type
+   AND r.regionname = p_reg;
+  RETURN lv_gym_leader;
+  exception
+   WHEN no_data_found THEN
+     dbms_output.put_line('There is no gym in ' || p_reg|| ' this uses '|| p_type||
+     ' pokemon');
+ END gym_leader_pf;
+END pkmn_item_pkg;
+ 
+ -- inserts data to a log table when an update on pm_moves happens
+CREATE OR REPLACE TRIGGER pm_itemchange_trg
+  AFTER UPDATE OF POWER ON pm_moves
+  FOR EACH ROW
+DECLARE 
+lv_value NUMBER(2);
+lv_change VARCHAR(5);
+ BEGIN
+ IF :OLD.POWER < :NEW.POWER THEN
+  lv_value := :NEW.POWER - :OLD.POWER;
+  lv_change := 'Add';
+  ELSE lv_value := :OLD.POWER - :NEW.POWER;
+  lv_change := 'Minus';
+  END IF;
+   INSERT INTO move_change_log
+    VALUES(:NEW.moveid, SYSDATE, lv_value, lv_change);
+ END pm_itemchange_trg;
+
+ -- inserts data to a log table
+CREATE OR REPLACE TRIGGER pkmn_new_trg
+ AFTER INSERT ON pm_pokemon
+ FOR EACH ROW
+DECLARE
+lv_pkid pm_pokemon.nationaldexid%TYPE;
+BEGIN 
+  SELECT nationaldexid
+  INTO lv_pkid
+  FROM pm_pokemon
+  WHERE nationaldexid = :NEW.nationaldexid;
+  INSERT INTO new_pkmn_log VALUES(lv_pkid, SYSDATE);
+END pkmn_new_trg;
+

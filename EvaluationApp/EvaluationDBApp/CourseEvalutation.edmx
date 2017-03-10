@@ -1,0 +1,691 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CourseEvaluationModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Course">
+          <Key>
+            <PropertyRef Name="CourseNumber" />
+          </Key>
+          <Property Name="CourseNumber" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="CourseName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CourseDescription" Type="text" />
+          <Property Name="Credits" Type="int" Nullable="false" />
+          <Property Name="OfferedFall" Type="bit" Nullable="false" />
+          <Property Name="OfferedWinter" Type="bit" Nullable="false" />
+          <Property Name="OfferedSpring" Type="bit" Nullable="false" />
+          <Property Name="OfferedSummer" Type="bit" Nullable="false" />
+          <Property Name="PrerequisiteCourseNumber" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Evaluation">
+          <Key>
+            <PropertyRef Name="EvaluationID" />
+          </Key>
+          <Property Name="EvaluationID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CourseNumber" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+          <Property Name="EndDate" Type="date" />
+        </EntityType>
+        <EntityType Name="EvaluationQuestion">
+          <Key>
+            <PropertyRef Name="EvaluationID" />
+            <PropertyRef Name="QuestionID" />
+          </Key>
+          <Property Name="EvaluationID" Type="int" Nullable="false" />
+          <Property Name="QuestionID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="QuestionID" />
+          </Key>
+          <Property Name="QuestionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QuestionTypeID" Type="int" Nullable="false" />
+          <Property Name="QuestionText" Type="nvarchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="QuestionType">
+          <Key>
+            <PropertyRef Name="QuestionTypeID" />
+          </Key>
+          <Property Name="QuestionTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QuestionTypeName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="StudentID" />
+          </Key>
+          <Property Name="StudentID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="EmailAddress" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="LNumber" Type="nchar" MaxLength="9" />
+        </EntityType>
+        <EntityType Name="StudentEvaluation">
+          <Key>
+            <PropertyRef Name="StudentEvaluationID" />
+          </Key>
+          <Property Name="StudentEvaluationID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StudentID" Type="int" Nullable="false" />
+          <Property Name="EvaluationID" Type="int" Nullable="false" />
+          <Property Name="CompletionDate" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StudentEvaluationAnswer">
+          <Key>
+            <PropertyRef Name="StudentEvaluationID" />
+            <PropertyRef Name="QuestionID" />
+          </Key>
+          <Property Name="StudentEvaluationID" Type="int" Nullable="false" />
+          <Property Name="QuestionID" Type="int" Nullable="false" />
+          <Property Name="Answer" Type="nvarchar" MaxLength="1000" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StudentRegistration">
+          <Key>
+            <PropertyRef Name="StudentID" />
+            <PropertyRef Name="CourseNumber" />
+          </Key>
+          <Property Name="StudentID" Type="int" Nullable="false" />
+          <Property Name="CourseNumber" Type="nchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CourseEvaluation.dbo.vw_StudentAvailableEvaluation' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vw_StudentAvailableEvaluation">
+          <Key>
+            <PropertyRef Name="CourseNumber" />
+            <PropertyRef Name="StudentID" />
+            <PropertyRef Name="EvaluationID" />
+            <PropertyRef Name="StartDate" />
+          </Key>
+          <Property Name="CourseNumber" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="StudentID" Type="int" Nullable="false" />
+          <Property Name="EvaluationID" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+          <Property Name="EndDate" Type="date" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'CourseEvaluation.dbo.vw_StudentIncompleteEvaluation' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vw_StudentIncompleteEvaluation">
+          <Key>
+            <PropertyRef Name="CourseNumber" />
+            <PropertyRef Name="StudentID" />
+            <PropertyRef Name="EvaluationID" />
+            <PropertyRef Name="StartDate" />
+          </Key>
+          <Property Name="CompletionDate" Type="date" />
+          <Property Name="CourseNumber" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="StudentID" Type="int" Nullable="false" />
+          <Property Name="EvaluationID" Type="int" Nullable="false" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+          <Property Name="EndDate" Type="date" />
+        </EntityType>
+        <Association Name="FK_Evaluation_Course">
+          <End Role="Course" Type="Self.Course" Multiplicity="1" />
+          <End Role="Evaluation" Type="Self.Evaluation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Course">
+              <PropertyRef Name="CourseNumber" />
+            </Principal>
+            <Dependent Role="Evaluation">
+              <PropertyRef Name="CourseNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EvaluationQuestion_Evaluation">
+          <End Role="Evaluation" Type="Self.Evaluation" Multiplicity="1" />
+          <End Role="EvaluationQuestion" Type="Self.EvaluationQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Evaluation">
+              <PropertyRef Name="EvaluationID" />
+            </Principal>
+            <Dependent Role="EvaluationQuestion">
+              <PropertyRef Name="EvaluationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EvaluationQuestion_Question">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="EvaluationQuestion" Type="Self.EvaluationQuestion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionID" />
+            </Principal>
+            <Dependent Role="EvaluationQuestion">
+              <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Question_QuestionType">
+          <End Role="QuestionType" Type="Self.QuestionType" Multiplicity="1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="QuestionType">
+              <PropertyRef Name="QuestionTypeID" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="QuestionTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudentEvaluation_Evaluation">
+          <End Role="Evaluation" Type="Self.Evaluation" Multiplicity="1" />
+          <End Role="StudentEvaluation" Type="Self.StudentEvaluation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Evaluation">
+              <PropertyRef Name="EvaluationID" />
+            </Principal>
+            <Dependent Role="StudentEvaluation">
+              <PropertyRef Name="EvaluationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudentEvaluation_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="StudentEvaluation" Type="Self.StudentEvaluation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="StudentID" />
+            </Principal>
+            <Dependent Role="StudentEvaluation">
+              <PropertyRef Name="StudentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudentEvaluationQuestion_Question">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="StudentEvaluationAnswer" Type="Self.StudentEvaluationAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionID" />
+            </Principal>
+            <Dependent Role="StudentEvaluationAnswer">
+              <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudentEvaluationQuestion_StudentEvaluation">
+          <End Role="StudentEvaluation" Type="Self.StudentEvaluation" Multiplicity="1" />
+          <End Role="StudentEvaluationAnswer" Type="Self.StudentEvaluationAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StudentEvaluation">
+              <PropertyRef Name="StudentEvaluationID" />
+            </Principal>
+            <Dependent Role="StudentEvaluationAnswer">
+              <PropertyRef Name="StudentEvaluationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudentRegistration_Course">
+          <End Role="Course" Type="Self.Course" Multiplicity="1" />
+          <End Role="StudentRegistration" Type="Self.StudentRegistration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Course">
+              <PropertyRef Name="CourseNumber" />
+            </Principal>
+            <Dependent Role="StudentRegistration">
+              <PropertyRef Name="CourseNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudentRegistration_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="StudentRegistration" Type="Self.StudentRegistration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="StudentID" />
+            </Principal>
+            <Dependent Role="StudentRegistration">
+              <PropertyRef Name="StudentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CourseEvaluationModelStoreContainer">
+          <EntitySet Name="Course" EntityType="Self.Course" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Evaluation" EntityType="Self.Evaluation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EvaluationQuestion" EntityType="Self.EvaluationQuestion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="QuestionType" EntityType="Self.QuestionType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StudentEvaluation" EntityType="Self.StudentEvaluation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StudentEvaluationAnswer" EntityType="Self.StudentEvaluationAnswer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StudentRegistration" EntityType="Self.StudentRegistration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vw_StudentAvailableEvaluation" EntityType="Self.vw_StudentAvailableEvaluation" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_StudentAvailableEvaluation].[CourseNumber] AS [CourseNumber], 
+    [vw_StudentAvailableEvaluation].[StudentID] AS [StudentID], 
+    [vw_StudentAvailableEvaluation].[EvaluationID] AS [EvaluationID], 
+    [vw_StudentAvailableEvaluation].[StartDate] AS [StartDate], 
+    [vw_StudentAvailableEvaluation].[EndDate] AS [EndDate]
+    FROM [dbo].[vw_StudentAvailableEvaluation] AS [vw_StudentAvailableEvaluation]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vw_StudentIncompleteEvaluation" EntityType="Self.vw_StudentIncompleteEvaluation" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vw_StudentIncompleteEvaluation].[CompletionDate] AS [CompletionDate], 
+    [vw_StudentIncompleteEvaluation].[CourseNumber] AS [CourseNumber], 
+    [vw_StudentIncompleteEvaluation].[StudentID] AS [StudentID], 
+    [vw_StudentIncompleteEvaluation].[EvaluationID] AS [EvaluationID], 
+    [vw_StudentIncompleteEvaluation].[StartDate] AS [StartDate], 
+    [vw_StudentIncompleteEvaluation].[EndDate] AS [EndDate]
+    FROM [dbo].[vw_StudentIncompleteEvaluation] AS [vw_StudentIncompleteEvaluation]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Evaluation_Course" Association="Self.FK_Evaluation_Course">
+            <End Role="Course" EntitySet="Course" />
+            <End Role="Evaluation" EntitySet="Evaluation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EvaluationQuestion_Evaluation" Association="Self.FK_EvaluationQuestion_Evaluation">
+            <End Role="Evaluation" EntitySet="Evaluation" />
+            <End Role="EvaluationQuestion" EntitySet="EvaluationQuestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EvaluationQuestion_Question" Association="Self.FK_EvaluationQuestion_Question">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="EvaluationQuestion" EntitySet="EvaluationQuestion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Question_QuestionType" Association="Self.FK_Question_QuestionType">
+            <End Role="QuestionType" EntitySet="QuestionType" />
+            <End Role="Question" EntitySet="Question" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudentEvaluation_Evaluation" Association="Self.FK_StudentEvaluation_Evaluation">
+            <End Role="Evaluation" EntitySet="Evaluation" />
+            <End Role="StudentEvaluation" EntitySet="StudentEvaluation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudentEvaluation_Student" Association="Self.FK_StudentEvaluation_Student">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="StudentEvaluation" EntitySet="StudentEvaluation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudentEvaluationQuestion_Question" Association="Self.FK_StudentEvaluationQuestion_Question">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="StudentEvaluationAnswer" EntitySet="StudentEvaluationAnswer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudentEvaluationQuestion_StudentEvaluation" Association="Self.FK_StudentEvaluationQuestion_StudentEvaluation">
+            <End Role="StudentEvaluation" EntitySet="StudentEvaluation" />
+            <End Role="StudentEvaluationAnswer" EntitySet="StudentEvaluationAnswer" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudentRegistration_Course" Association="Self.FK_StudentRegistration_Course">
+            <End Role="Course" EntitySet="Course" />
+            <End Role="StudentRegistration" EntitySet="StudentRegistration" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudentRegistration_Student" Association="Self.FK_StudentRegistration_Student">
+            <End Role="Student" EntitySet="Student" />
+            <End Role="StudentRegistration" EntitySet="StudentRegistration" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CourseEvaluationModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Course">
+          <Key>
+            <PropertyRef Name="CourseNumber" />
+          </Key>
+          <Property Name="CourseNumber" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="CourseName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CourseDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Credits" Type="Int32" Nullable="false" />
+          <Property Name="OfferedFall" Type="Boolean" Nullable="false" />
+          <Property Name="OfferedWinter" Type="Boolean" Nullable="false" />
+          <Property Name="OfferedSpring" Type="Boolean" Nullable="false" />
+          <Property Name="OfferedSummer" Type="Boolean" Nullable="false" />
+          <Property Name="PrerequisiteCourseNumber" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Evaluations" Relationship="Self.FK_Evaluation_Course" FromRole="Course" ToRole="Evaluation" />
+          <NavigationProperty Name="Students" Relationship="Self.StudentRegistration" FromRole="Course" ToRole="Student" />
+        </EntityType>
+        <EntityType Name="Evaluation">
+          <Key>
+            <PropertyRef Name="EvaluationID" />
+          </Key>
+          <Property Name="EvaluationID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CourseNumber" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Course" Relationship="Self.FK_Evaluation_Course" FromRole="Evaluation" ToRole="Course" />
+          <NavigationProperty Name="StudentEvaluations" Relationship="Self.FK_StudentEvaluation_Evaluation" FromRole="Evaluation" ToRole="StudentEvaluation" />
+          <NavigationProperty Name="Questions" Relationship="Self.EvaluationQuestion" FromRole="Evaluation" ToRole="Question" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="QuestionID" />
+          </Key>
+          <Property Name="QuestionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuestionTypeID" Type="Int32" Nullable="false" />
+          <Property Name="QuestionText" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="QuestionType" Relationship="Self.FK_Question_QuestionType" FromRole="Question" ToRole="QuestionType" />
+          <NavigationProperty Name="StudentEvaluationAnswers" Relationship="Self.FK_StudentEvaluationQuestion_Question" FromRole="Question" ToRole="StudentEvaluationAnswer" />
+          <NavigationProperty Name="Evaluations" Relationship="Self.EvaluationQuestion" FromRole="Question" ToRole="Evaluation" />
+        </EntityType>
+        <EntityType Name="QuestionType">
+          <Key>
+            <PropertyRef Name="QuestionTypeID" />
+          </Key>
+          <Property Name="QuestionTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QuestionTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Questions" Relationship="Self.FK_Question_QuestionType" FromRole="QuestionType" ToRole="Question" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="StudentID" />
+          </Key>
+          <Property Name="StudentID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EmailAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LNumber" Type="String" MaxLength="9" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="StudentEvaluations" Relationship="Self.FK_StudentEvaluation_Student" FromRole="Student" ToRole="StudentEvaluation" />
+          <NavigationProperty Name="Courses" Relationship="Self.StudentRegistration" FromRole="Student" ToRole="Course" />
+        </EntityType>
+        <EntityType Name="StudentEvaluation">
+          <Key>
+            <PropertyRef Name="StudentEvaluationID" />
+          </Key>
+          <Property Name="StudentEvaluationID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StudentID" Type="Int32" Nullable="false" />
+          <Property Name="EvaluationID" Type="Int32" Nullable="false" />
+          <Property Name="CompletionDate" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Evaluation" Relationship="Self.FK_StudentEvaluation_Evaluation" FromRole="StudentEvaluation" ToRole="Evaluation" />
+          <NavigationProperty Name="Student" Relationship="Self.FK_StudentEvaluation_Student" FromRole="StudentEvaluation" ToRole="Student" />
+          <NavigationProperty Name="StudentEvaluationAnswers" Relationship="Self.FK_StudentEvaluationQuestion_StudentEvaluation" FromRole="StudentEvaluation" ToRole="StudentEvaluationAnswer" />
+        </EntityType>
+        <EntityType Name="StudentEvaluationAnswer">
+          <Key>
+            <PropertyRef Name="StudentEvaluationID" />
+            <PropertyRef Name="QuestionID" />
+          </Key>
+          <Property Name="StudentEvaluationID" Type="Int32" Nullable="false" />
+          <Property Name="QuestionID" Type="Int32" Nullable="false" />
+          <Property Name="Answer" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Question" Relationship="Self.FK_StudentEvaluationQuestion_Question" FromRole="StudentEvaluationAnswer" ToRole="Question" />
+          <NavigationProperty Name="StudentEvaluation" Relationship="Self.FK_StudentEvaluationQuestion_StudentEvaluation" FromRole="StudentEvaluationAnswer" ToRole="StudentEvaluation" />
+        </EntityType>
+        <EntityType Name="vw_StudentAvailableEvaluation">
+          <Key>
+            <PropertyRef Name="CourseNumber" />
+            <PropertyRef Name="StudentID" />
+            <PropertyRef Name="EvaluationID" />
+            <PropertyRef Name="StartDate" />
+          </Key>
+          <Property Name="CourseNumber" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="StudentID" Type="Int32" Nullable="false" />
+          <Property Name="EvaluationID" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="vw_StudentIncompleteEvaluation">
+          <Key>
+            <PropertyRef Name="CourseNumber" />
+            <PropertyRef Name="StudentID" />
+            <PropertyRef Name="EvaluationID" />
+            <PropertyRef Name="StartDate" />
+          </Key>
+          <Property Name="CompletionDate" Type="DateTime" Precision="0" />
+          <Property Name="CourseNumber" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="StudentID" Type="Int32" Nullable="false" />
+          <Property Name="EvaluationID" Type="Int32" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Precision="0" />
+        </EntityType>
+        <Association Name="FK_Evaluation_Course">
+          <End Role="Course" Type="Self.Course" Multiplicity="1" />
+          <End Role="Evaluation" Type="Self.Evaluation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Course">
+              <PropertyRef Name="CourseNumber" />
+            </Principal>
+            <Dependent Role="Evaluation">
+              <PropertyRef Name="CourseNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudentEvaluation_Evaluation">
+          <End Role="Evaluation" Type="Self.Evaluation" Multiplicity="1" />
+          <End Role="StudentEvaluation" Type="Self.StudentEvaluation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Evaluation">
+              <PropertyRef Name="EvaluationID" />
+            </Principal>
+            <Dependent Role="StudentEvaluation">
+              <PropertyRef Name="EvaluationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Question_QuestionType">
+          <End Role="QuestionType" Type="Self.QuestionType" Multiplicity="1" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="QuestionType">
+              <PropertyRef Name="QuestionTypeID" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="QuestionTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudentEvaluationQuestion_Question">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="StudentEvaluationAnswer" Type="Self.StudentEvaluationAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionID" />
+            </Principal>
+            <Dependent Role="StudentEvaluationAnswer">
+              <PropertyRef Name="QuestionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudentEvaluation_Student">
+          <End Role="Student" Type="Self.Student" Multiplicity="1" />
+          <End Role="StudentEvaluation" Type="Self.StudentEvaluation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Student">
+              <PropertyRef Name="StudentID" />
+            </Principal>
+            <Dependent Role="StudentEvaluation">
+              <PropertyRef Name="StudentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_StudentEvaluationQuestion_StudentEvaluation">
+          <End Role="StudentEvaluation" Type="Self.StudentEvaluation" Multiplicity="1" />
+          <End Role="StudentEvaluationAnswer" Type="Self.StudentEvaluationAnswer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="StudentEvaluation">
+              <PropertyRef Name="StudentEvaluationID" />
+            </Principal>
+            <Dependent Role="StudentEvaluationAnswer">
+              <PropertyRef Name="StudentEvaluationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="EvaluationQuestion">
+          <End Role="Evaluation" Type="Self.Evaluation" Multiplicity="*" />
+          <End Role="Question" Type="Self.Question" Multiplicity="*" />
+        </Association>
+        <Association Name="StudentRegistration">
+          <End Role="Course" Type="Self.Course" Multiplicity="*" />
+          <End Role="Student" Type="Self.Student" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="CourseEvaluationEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Courses" EntityType="Self.Course" />
+          <EntitySet Name="Evaluations" EntityType="Self.Evaluation" />
+          <EntitySet Name="Questions" EntityType="Self.Question" />
+          <EntitySet Name="QuestionTypes" EntityType="Self.QuestionType" />
+          <EntitySet Name="Students" EntityType="Self.Student" />
+          <EntitySet Name="StudentEvaluations" EntityType="Self.StudentEvaluation" />
+          <EntitySet Name="StudentEvaluationAnswers" EntityType="Self.StudentEvaluationAnswer" />
+          <EntitySet Name="vw_StudentAvailableEvaluation" EntityType="Self.vw_StudentAvailableEvaluation" />
+          <EntitySet Name="vw_StudentIncompleteEvaluation" EntityType="Self.vw_StudentIncompleteEvaluation" />
+          <AssociationSet Name="FK_Evaluation_Course" Association="Self.FK_Evaluation_Course">
+            <End Role="Course" EntitySet="Courses" />
+            <End Role="Evaluation" EntitySet="Evaluations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudentEvaluation_Evaluation" Association="Self.FK_StudentEvaluation_Evaluation">
+            <End Role="Evaluation" EntitySet="Evaluations" />
+            <End Role="StudentEvaluation" EntitySet="StudentEvaluations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Question_QuestionType" Association="Self.FK_Question_QuestionType">
+            <End Role="QuestionType" EntitySet="QuestionTypes" />
+            <End Role="Question" EntitySet="Questions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudentEvaluationQuestion_Question" Association="Self.FK_StudentEvaluationQuestion_Question">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="StudentEvaluationAnswer" EntitySet="StudentEvaluationAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudentEvaluation_Student" Association="Self.FK_StudentEvaluation_Student">
+            <End Role="Student" EntitySet="Students" />
+            <End Role="StudentEvaluation" EntitySet="StudentEvaluations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_StudentEvaluationQuestion_StudentEvaluation" Association="Self.FK_StudentEvaluationQuestion_StudentEvaluation">
+            <End Role="StudentEvaluation" EntitySet="StudentEvaluations" />
+            <End Role="StudentEvaluationAnswer" EntitySet="StudentEvaluationAnswers" />
+          </AssociationSet>
+          <AssociationSet Name="EvaluationQuestion" Association="Self.EvaluationQuestion">
+            <End Role="Evaluation" EntitySet="Evaluations" />
+            <End Role="Question" EntitySet="Questions" />
+          </AssociationSet>
+          <AssociationSet Name="StudentRegistration" Association="Self.StudentRegistration">
+            <End Role="Course" EntitySet="Courses" />
+            <End Role="Student" EntitySet="Students" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CourseEvaluationModelStoreContainer" CdmEntityContainer="CourseEvaluationEntities">
+          <EntitySetMapping Name="Courses">
+            <EntityTypeMapping TypeName="CourseEvaluationModel.Course">
+              <MappingFragment StoreEntitySet="Course">
+                <ScalarProperty Name="CourseNumber" ColumnName="CourseNumber" />
+                <ScalarProperty Name="CourseName" ColumnName="CourseName" />
+                <ScalarProperty Name="CourseDescription" ColumnName="CourseDescription" />
+                <ScalarProperty Name="Credits" ColumnName="Credits" />
+                <ScalarProperty Name="OfferedFall" ColumnName="OfferedFall" />
+                <ScalarProperty Name="OfferedWinter" ColumnName="OfferedWinter" />
+                <ScalarProperty Name="OfferedSpring" ColumnName="OfferedSpring" />
+                <ScalarProperty Name="OfferedSummer" ColumnName="OfferedSummer" />
+                <ScalarProperty Name="PrerequisiteCourseNumber" ColumnName="PrerequisiteCourseNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Evaluations">
+            <EntityTypeMapping TypeName="CourseEvaluationModel.Evaluation">
+              <MappingFragment StoreEntitySet="Evaluation">
+                <ScalarProperty Name="EvaluationID" ColumnName="EvaluationID" />
+                <ScalarProperty Name="CourseNumber" ColumnName="CourseNumber" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Questions">
+            <EntityTypeMapping TypeName="CourseEvaluationModel.Question">
+              <MappingFragment StoreEntitySet="Question">
+                <ScalarProperty Name="QuestionID" ColumnName="QuestionID" />
+                <ScalarProperty Name="QuestionTypeID" ColumnName="QuestionTypeID" />
+                <ScalarProperty Name="QuestionText" ColumnName="QuestionText" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="QuestionTypes">
+            <EntityTypeMapping TypeName="CourseEvaluationModel.QuestionType">
+              <MappingFragment StoreEntitySet="QuestionType">
+                <ScalarProperty Name="QuestionTypeID" ColumnName="QuestionTypeID" />
+                <ScalarProperty Name="QuestionTypeName" ColumnName="QuestionTypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Students">
+            <EntityTypeMapping TypeName="CourseEvaluationModel.Student">
+              <MappingFragment StoreEntitySet="Student">
+                <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="LNumber" ColumnName="LNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StudentEvaluations">
+            <EntityTypeMapping TypeName="CourseEvaluationModel.StudentEvaluation">
+              <MappingFragment StoreEntitySet="StudentEvaluation">
+                <ScalarProperty Name="StudentEvaluationID" ColumnName="StudentEvaluationID" />
+                <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+                <ScalarProperty Name="EvaluationID" ColumnName="EvaluationID" />
+                <ScalarProperty Name="CompletionDate" ColumnName="CompletionDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StudentEvaluationAnswers">
+            <EntityTypeMapping TypeName="CourseEvaluationModel.StudentEvaluationAnswer">
+              <MappingFragment StoreEntitySet="StudentEvaluationAnswer">
+                <ScalarProperty Name="StudentEvaluationID" ColumnName="StudentEvaluationID" />
+                <ScalarProperty Name="QuestionID" ColumnName="QuestionID" />
+                <ScalarProperty Name="Answer" ColumnName="Answer" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_StudentAvailableEvaluation">
+            <EntityTypeMapping TypeName="CourseEvaluationModel.vw_StudentAvailableEvaluation">
+              <MappingFragment StoreEntitySet="vw_StudentAvailableEvaluation">
+                <ScalarProperty Name="CourseNumber" ColumnName="CourseNumber" />
+                <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+                <ScalarProperty Name="EvaluationID" ColumnName="EvaluationID" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vw_StudentIncompleteEvaluation">
+            <EntityTypeMapping TypeName="CourseEvaluationModel.vw_StudentIncompleteEvaluation">
+              <MappingFragment StoreEntitySet="vw_StudentIncompleteEvaluation">
+                <ScalarProperty Name="CompletionDate" ColumnName="CompletionDate" />
+                <ScalarProperty Name="CourseNumber" ColumnName="CourseNumber" />
+                <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+                <ScalarProperty Name="EvaluationID" ColumnName="EvaluationID" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="EvaluationQuestion" TypeName="CourseEvaluationModel.EvaluationQuestion" StoreEntitySet="EvaluationQuestion">
+            <EndProperty Name="Evaluation">
+              <ScalarProperty Name="EvaluationID" ColumnName="EvaluationID" />
+            </EndProperty>
+            <EndProperty Name="Question">
+              <ScalarProperty Name="QuestionID" ColumnName="QuestionID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="StudentRegistration" TypeName="CourseEvaluationModel.StudentRegistration" StoreEntitySet="StudentRegistration">
+            <EndProperty Name="Course">
+              <ScalarProperty Name="CourseNumber" ColumnName="CourseNumber" />
+            </EndProperty>
+            <EndProperty Name="Student">
+              <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

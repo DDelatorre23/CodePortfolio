@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAQRUGqVEYU0Gwo41CE8VGXAAAAAACAAAAAAAQZgAAAAEAACAAAAAlxM1zpz8rN5aYAEx0amoXJypYL9lbdrx+709QjydtEwAAAAAOgAAAAAIAACAAAACw+xowbeD9FBGZrK/1KfA6WkPHaNqLIHAiCoQDJULLUIAAAABAPRrtrdt24P6aZSnU1VmjVPbDf18f07G3ixI4Q+1cpPjGPfmTIBpmrsUXfApDknEFW6ql0oMcJZY1Bl6faX9vA9opF8esHOro9jvsIWbyPlhfdJ+1/F2iFFB8tjo4PTjwuaB1nb4MnLwMS7GUxHj2jDP5Tb5Sf+mV6vdhxRdTZkAAAAAi0eF5wIASn+z136USFEeIR21jd+TOcyWOsRLyOjeCKwyaorZFpqhIFLIFoWfOkWOhODriX5AJs0FXApxtXq96</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <EfMigrations Include="CommunityWebSite.Models.ApplicationDbContext">
+      <Value>"Server=tcp:harrisburgcomm.database.windows.net,1433;Initial Catalog=HarrisburgCommunity;PersistSecurity Info=False;UserID=AdminUser223;Password=p@ssw0rd;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"</Value>
+    </EfMigrations>
+  </ItemGroup>
+</Project>

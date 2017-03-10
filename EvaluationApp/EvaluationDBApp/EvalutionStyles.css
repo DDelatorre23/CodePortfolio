@@ -1,0 +1,93 @@
+﻿.typeOne {
+    padding: 5px 0px;
+    background-color: #2e6cb9;
+    font-weight: bold;
+    border: 1px solid black;
+}
+
+.typeOne .questionlabel {
+    margin-left: 5px;
+}
+
+.typeTwo {
+    margin: 5px;
+}
+
+form {
+    background-color: rgb(233, 233, 233);
+    font-weight: bold;
+    font-size: 18px;
+
+}
+.buttons {
+    border: 1px solid black;
+    background-color: #2e6cb9;
+    margin: 10px;
+    font-weight: bold;
+}
+
+.textAnswer {
+    height: 50px;
+    width: 300px;
+    border: 1px solid black;
+
+}
+body, header, footer {
+    background-color: rgb(232, 233, 233);
+    border: 1px solid black;
+}
+
+.nav ul li {
+    display: block;
+    float: left;
+    width: 100px;
+    height: 50px;
+    margin: 5px;
+}
+
+.nav ul li a {
+    display: block;
+    clear: left;
+    width: 100%;
+    line-height: 50px;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 50%;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    background-color: #2e6cb9;
+
+    border: 1px solid black;
+}
+
+.nav ul li a:hover {
+    background-color: white;
+}
+
+.nav {
+    display: block;
+    float: left;
+    width: 100%;
+}
+
+header {
+    width: 100%;
+    float: left;
+    display: block;
+    height: 100px;
+}
+
+.loginForm {
+    margin-left: 5px;
+}
+
+footer {
+    border: 0px solid black;
+    text-align: center;
+    color: rgb(52, 52, 52);
+    font-weight: bold;
+    font-style: italic;
+    margin: 10px 0px;
+}

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffffff">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/textView1"
+        android:clickable="true" />
+    <TextView
+        android:text="It's Super Effective"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/textView2"
+        android:gravity="center"
+        android:textSize="60dp"
+        android:textColor="#ff000000"
+        android:textStyle="bold"
+        android:typeface="serif" />
+</LinearLayout>
