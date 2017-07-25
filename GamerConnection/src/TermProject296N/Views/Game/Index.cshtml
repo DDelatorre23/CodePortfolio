@@ -1,0 +1,24 @@
+﻿@model GameViewModel
+<div class="container">
+    <div class="row">
+    @foreach (Game g in Model.Games) {
+        <input type="hidden" asp-for="SelectedGame" value="@g" />
+
+        <div class="col-xs-12 col-sm-6 col-md-3 rwrapper">
+            <div class="rlisting">
+                <div class="col-md-12 nopad">
+                    <img src="http://dummyimage.com/250x250" class="img-responsive">
+                </div>
+                <div class="col-md-12 nopad">
+                    <h5>@g.Title</h5>
+                    <p>@g.Platform</p>
+                    <div class="rfooter">
+                        @Html.ActionLink("Request Partner", "Create", "Request", g, null);
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    </div>
+    
+</div>
